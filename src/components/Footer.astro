@@ -1,0 +1,68 @@
+---
+const year = new Date().getFullYear();
+
+const logo =
+	"https://lifud-spain.es/wp/wp-content/uploads/2025/10/LOGO-LIFUD-by-CONCORD-EUROPA-NEGRO-01-1.png";
+
+const columns = [
+	{
+		title: "Producto",
+		links: ["Servicios", "Precios", "Novedades", "Documentación"],
+	},
+	{
+		title: "Empresa",
+		links: ["Nosotros", "Equipo", "Blog", "Empleo"],
+	},
+	{
+		title: "Soporte",
+		links: ["Ayuda", "Contacto", "Estado del servicio", "Privacidad"],
+	},
+];
+---
+
+<footer class="border-t border-slate-800 bg-slate-900 text-slate-400">
+	<div class="mx-auto max-w-6xl px-4 py-14 sm:px-6">
+		<div class="grid gap-10 md:grid-cols-4">
+			<div>
+				<a href="#inicio" class="inline-flex items-center" aria-label="Lifud — ir al inicio">
+					<!-- El logo es negro: se pone sobre fondo blanco para que sea visible en el pie oscuro -->
+					<span class="inline-flex rounded-lg bg-white px-3 py-2">
+						<img
+							src={logo}
+							alt="Lifud"
+							class="h-12 w-auto object-contain"
+							width="2481"
+							height="1357"
+						/>
+					</span>
+				</a>
+				<p class="mt-4 text-sm leading-relaxed">
+					Texto de ejemplo del pie de página. Aquí puedes resumir qué hace tu proyecto en una o dos
+					líneas.
+				</p>
+			</div>
+
+			{
+				columns.map((column) => (
+					<div>
+						<h3 class="text-sm font-semibold uppercase tracking-wider text-white">{column.title}</h3>
+						<ul class="mt-4 space-y-2 text-sm">
+							{column.links.map((link) => (
+								<li>
+									<a href="#inicio" class="transition hover:text-white">
+										{link}
+									</a>
+								</li>
+							))}
+						</ul>
+					</div>
+				))
+			}
+		</div>
+
+		<div class="mt-12 flex flex-col items-center justify-between gap-4 border-t border-slate-800 pt-6 text-xs sm:flex-row">
+			<p>© {year} Lifud. Todos los derechos reservados.</p>
+			<p>Texto de ejemplo · Hecho con Astro y Tailwind CSS</p>
+		</div>
+	</div>
+</footer>

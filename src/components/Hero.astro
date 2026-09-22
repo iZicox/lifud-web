@@ -1,0 +1,136 @@
+---
+// Datos del hero desde la API de WordPress (se ejecuta en el servidor:
+// en `astro dev` va a cada petición, en `astro build` una sola vez).
+const WP_API = "https://lifud-spain.es/wp/wp-json/wp/v2/pages?slug=home";
+
+type AcfField = { campo: string; valor: string };
+
+/** Textos de reserva por si la API de WordPress no responde. */
+const fallback = {
+	titulo: "Construye tu presencia digital sin complicaciones",
+	subtitulo:
+		"Lifud te ayuda a lanzar sitios rápidos, modernos y fáciles de mantener. Plantillas listas para usar, rendimiento optimizado y todo el control en tus manos.",
+	slogan: "Nueva versión 2.0 disponible",
+	cards: [
+		"Almacén central en Madrid",
+		"Garantía de 5 Años",
+		"Soporte de Ingenieros",
+		"Normativa DiiA & CB",
+	],
+	pruebaSocial: "Delegación Oficial España y Portugal • Almacén Propio y Stock Inmediato",
+};
+
+// 1) Fetch de la página "home" y extracción de `acf` del item 0 del array.
+let acfFields: AcfField[] = [];
+try {
+	const res = await fetch(WP_API, { headers: { Accept: "application/json" } });
+	if (!res.ok) throw new Error(`HTTP ${res.status}`);
+	const pages = await res.json();
+	const acf = pages?.[0]?.acf ?? {};
+	// 2) Todos los datos de ACF guardados en un array de { campo, valor }.
+	acfFields = Object.entries(acf).map(([campo, valor]) => ({ campo, valor }));
+} catch (error) {
+	console.warn("[Hero] No se pudo obtener ACF de WordPress, uso fallback:", error);
+}
+
+// 3) Ayudantes para leer el array.
+const get = (campo: string, porDefecto: string) =>
+	acfFields.find((f) => f.campo === campo)?.valor || porDefecto;
+
+const getCards = () => {
+	const valores = acfFields
+		.filter((f) => /^headless_hero_card\d+$/.test(f.campo))
+		.map((f) => f.valor)
+		.filter(Boolean);
+	return valores.length ? valores : fallback.cards;
+};
+
+const titulo = get("headless_hero_titulo", fallback.titulo);
+const subtitulo = get("headless_hero_subtitulo", fallback.subtitulo);
+const slogan = get("headless_slogan", fallback.slogan);
+const pruebaSocial = get("headless_hero_pruebasocial", fallback.pruebaSocial);
+const cards = getCards();
+
+// Imagen de fondo del hero
+const heroBg =
+	"https://lifud-spain.es/wp/wp-content/uploads/2025/09/VideoTourFabrica_10_1s-1.jpg";
+---
+
+<section id="inicio" class="relative isolate overflow-hidden bg-slate-950">
+	<!-- 1) Imagen de fondo -->
+	<div
+		class="absolute inset-0 -z-30 bg-cover bg-center"
+		style={`background-image: url('${heroBg}')`}
+		aria-hidden="true"
+	></div>
+
+	<!-- 2) Capa azul oscuro encima: protege la legibilidad del texto -->
+	<div
+		class="absolute inset-0 -z-20 bg-gradient-to-r from-slate-950/95 via-slate-950/85 to-slate-950/60"
+		aria-hidden="true"
+	></div>
+
+	<!-- 3) Destellos decorativos -->
+	<div class="pointer-events-none absolute inset-0 -z-10" aria-hidden="true">
+		<div class="absolute -top-32 right-0 h-96 w-96 rounded-full bg-indigo-500/30 blur-3xl"></div>
+		<div class="absolute bottom-0 left-0 h-80 w-80 rounded-full bg-sky-500/20 blur-3xl"></div>
+	</div>
+
+	<div class="relative z-10 mx-auto max-w-6xl px-4 py-10 sm:px-6 sm:py-12">
+		<div class="max-w-3xl">
+			<!-- Prueba social ACF -->
+			<p class="mb-4 flex items-start gap-2 text-sm text-slate-300">
+				<svg class="mt-0.5 h-4 w-4 shrink-0 text-amber-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+					<path d="M12 3l2.6 5.3 5.9.9-4.2 4.1 1 5.8-5.3-2.8-5.3 2.8 1-5.8L3.5 9.2l5.9-.9L12 3z" />
+				</svg>
+				{pruebaSocial}
+			</p>
+
+			<span
+				class="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-3 py-1 text-xs font-medium text-slate-100 backdrop-blur-sm"
+			>
+				<span class="h-2 w-2 rounded-full bg-emerald-400"></span>
+				{slogan}
+			</span>
+
+			<h1 class="mt-6 text-4xl font-bold leading-tight tracking-tight text-white sm:text-6xl">
+				{titulo}
+			</h1>
+
+			<p class="mt-6 max-w-2xl text-lg leading-relaxed text-slate-200">
+				{subtitulo}
+			</p>
+
+			<div class="mt-10 flex flex-wrap items-center gap-4">
+				<a
+					href="#servicios"
+					class="rounded-full bg-indigo-500 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-indigo-900/40 transition hover:bg-indigo-400"
+				>
+					Ver servicios
+				</a>
+				<a
+					href="#contacto"
+					class="rounded-full border border-white/30 bg-white/10 px-6 py-3 text-sm font-semibold text-white transition hover:bg-white/20"
+				>
+					Contacto
+				</a>
+			</div>
+
+			<!-- Tarjetas ACF (card01 … card04) -->
+			<ul class="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+				{
+					cards.map((card) => (
+						<li class="flex items-center gap-3 rounded-xl border border-white/15 bg-white/10 px-4 py-3 backdrop-blur-sm">
+							<span class="grid h-7 w-7 shrink-0 place-items-center rounded-full bg-emerald-400/20 text-emerald-300">
+								<svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+									<path d="M5 13l4 4L19 7" />
+								</svg>
+							</span>
+							<span class="text-sm font-medium text-slate-100">{card}</span>
+						</li>
+					))
+				}
+			</ul>
+		</div>
+	</div>
+</section>

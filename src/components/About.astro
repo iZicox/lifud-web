@@ -1,0 +1,57 @@
+---
+const points = [
+	"Primer punto de ejemplo: describe una ventaja o característica importante de tu equipo.",
+	"Segundo punto de ejemplo: menciona un proceso, metodología o valores de la empresa.",
+	"Tercer punto de ejemplo: una cifra, logro o dato que genere confianza.",
+];
+---
+
+<section id="nosotros" class="bg-slate-50 py-10 sm:py-12">
+	<div class="mx-auto grid max-w-6xl items-center gap-12 px-4 sm:px-6 lg:grid-cols-2">
+		<div>
+			<p class="text-sm font-semibold uppercase tracking-wider text-indigo-600">Nosotros</p>
+			<h2 class="mt-3 text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
+				Un equipo pequeño con grandes ideas
+			</h2>
+			<p class="mt-5 leading-relaxed text-slate-600">
+				Texto de ejemplo para la sección "Nosotros". Aquí puedes contar la historia de tu proyecto,
+				cuándo nació, qué problema resuelve y qué te hace diferente de la competencia.
+			</p>
+			<p class="mt-4 leading-relaxed text-slate-600">
+				Segundo párrafo de ejemplo: incluye detalles sobre tu forma de trabajar, tus clientes o los
+				proyectos que te han marcado. Este contenido es totalmente editable.
+			</p>
+
+			<ul class="mt-8 space-y-4">
+				{
+					points.map((point) => (
+						<li class="flex items-start gap-3">
+							<span class="mt-0.5 grid h-6 w-6 shrink-0 place-items-center rounded-full bg-indigo-100 text-indigo-600">
+								<svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+									<path d="M5 13l4 4L19 7" />
+								</svg>
+							</span>
+							<span class="text-slate-700">{point}</span>
+						</li>
+					))
+				}
+			</ul>
+		</div>
+
+		<!-- Bloque visual de ejemplo -->
+		<div class="relative">
+			<div class="aspect-[4/3] rounded-3xl bg-gradient-to-br from-indigo-500 via-indigo-600 to-sky-500 shadow-2xl">
+				<div class="flex h-full flex-col justify-end p-8">
+					<p class="text-sm font-medium text-indigo-100">Texto de ejemplo sobre la imagen</p>
+					<p class="mt-2 text-2xl font-semibold leading-snug text-white">
+						"Las mejores ideas simples son las que perduran en el tiempo."
+					</p>
+				</div>
+			</div>
+			<div class="absolute -bottom-6 -left-6 hidden rounded-2xl border border-slate-200 bg-white px-6 py-4 shadow-lg sm:block">
+				<p class="text-2xl font-bold text-slate-900">2019</p>
+				<p class="text-sm text-slate-500">Año de fundación</p>
+			</div>
+		</div>
+	</div>
+</section>

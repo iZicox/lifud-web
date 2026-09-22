@@ -2,16 +2,26 @@
 import "../styles/global.css";
 ---
 <!doctype html>
-<html lang="en">
+<html lang="es">
 	<head>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width" />
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<link rel="icon" href="/favicon.ico" />
+		<!-- Precarga la imagen de fondo del hero (mejora el LCP) -->
+		<link
+			rel="preload"
+			as="image"
+			href="https://lifud-spain.es/wp/wp-content/uploads/2025/09/VideoTourFabrica_10_1s-1.jpg"
+		/>
 		<meta name="generator" content={Astro.generator} />
-		<title>Astro Basics</title>
+		<meta
+			name="description"
+			content="Lifud: construye tu presencia digital sin complicaciones. Sitios rápidos, modernos y fáciles de mantener."
+		/>
+		<title>Lifud — Construye tu presencia digital</title>
 	</head>
-	<body>
+	<body class="bg-white text-slate-900 antialiased">
 		<slot />
 	</body>
 </html>
