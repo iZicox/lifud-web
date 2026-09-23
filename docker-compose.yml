@@ -1,0 +1,38 @@
+services:
+  n8n:
+    image: n8nio/n8n
+    restart: always
+    networks:
+      - n8n_network
+    ports:
+      - "5678:5678"
+    environment:
+      # --- Configuración para ngrok ---
+      - N8N_HOST=0.0.0.0
+      - N8N_PORT=5678
+      - N8N_PROTOCOL=http
+      # --- ¡Obligatorio para que los webhooks funcionen! ---
+      - WEBHOOK_URL=https://unpreternaturally-unvanquished-amado.ngrok-free.dev
+      - N8N_EDITOR_BASE_URL=https://unpreternaturally-unvanquished-amado.ngrok-free.dev
+      - N8N_PROXY_HOPS=1
+    volumes:
+      - ./n8n_data:/home/node/.n8n
+
+  ngrok:
+    image: ngrok/ngrok:latest
+    restart: always
+    networks:
+      - n8n_network
+    ports:
+      - "4040:4040" # Puerto para la interfaz web de ngrok
+    environment:
+      - NGROK_AUTHTOKEN=3BjDMJU6C3cQPiWakfVlkkkCjd9_RgmqPmWtNB3fQ3N2KfJC
+    command: http n8n:5678
+
+networks:
+  n8n_network:
+    driver: bridge
+
+volumes:
+  n8n_data:
+    name: n8n_data
